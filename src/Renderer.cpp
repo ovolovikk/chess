@@ -102,6 +102,38 @@ void Renderer::drawSelection(std::optional<Position> selected) {
     }
 }
 
+void Renderer::drawLegalMoves(const std::vector<Move>& legalMoves) {
+    SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
+    for (const Move& m : legalMoves) {
+        SDL_Rect rect = { m.to.col * m_squareSize, m.to.row * m_squareSize, m_squareSize, m_squareSize };
+        
+        bool isCapture = (m.type == MoveType::Capture || 
+                          m.type == MoveType::PromotionCapture || 
+                          m.type == MoveType::EnPassant);
+                          
+        if (isCapture) {
+            // Draw red for captures
+            SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 120);
+        } else {
+            // Draw yellow for normal moves
+            SDL_SetRenderDrawColor(m_renderer, 255, 255, 0, 120);
+        }
+        
+        // As a nice touch, draw a slightly smaller rect for non-captures, or just fill the square?
+        // Let's draw a circle-like small rect or just a filled highlight
+        SDL_Rect innerRect = { rect.x + rect.w/3, rect.y + rect.h/3, rect.w/3, rect.h/3 };
+        
+        if (isCapture) {
+            // Full box for capture
+            SDL_RenderFillRect(m_renderer, &rect);
+        } else {
+            // Small dot for normal move
+            SDL_RenderFillRect(m_renderer, &innerRect);
+        }
+    }
+    SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_NONE);
+}
+
 void Renderer::present() {
     SDL_RenderPresent(m_renderer);
 }

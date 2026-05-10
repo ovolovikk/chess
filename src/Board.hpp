@@ -8,11 +8,12 @@ public:
     
     Piece getPiece(Position pos) const;
     void setPiece(Position pos, Piece piece);
+    
+    void movePiece(Position from, Position to);
 
     bool isInside(Position pos) const;
     bool isEmpty(Position pos) const;
 
-    bool makeMove(const Move& move);
     void setupStartingPosition();
 
 private:

@@ -4,6 +4,7 @@
 #include "GameState.hpp"
 #include "TextureManager.hpp"
 #include <memory>
+#include <vector>
 
 class Renderer {
 public:
@@ -16,9 +17,11 @@ public:
     void drawBoard();
     void drawPieces(const Board& board, TextureManager& tm);
     void drawSelection(std::optional<Position> selected);
+    void drawLegalMoves(const std::vector<Move>& legalMoves);
     void present();
 
     SDL_Renderer* getSDLRenderer() const { return m_renderer; }
+    SDL_Window* getSDLWindow() const { return m_window; }
     
     int getSquareSize() const { return m_squareSize; }
 

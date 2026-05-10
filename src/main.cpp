@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "GameState.hpp"
+#include "MoveGenerator.hpp"
 #include "Renderer.hpp"
 #include "TextureManager.hpp"
 #include "InputHandler.hpp"
@@ -66,11 +67,33 @@ int main(int argc, char* argv[])
             game.selectSquare(Position{row, col});
         }
 
+        std::vector<Move> legalMoves;
+        if (game.selectedSquare.has_value()) {
+            MoveGenerator gen;
+            legalMoves = gen.generateLegalMoves(game, *game.selectedSquare);
+        }
+
         renderer.clear();
         renderer.drawBoard();
         renderer.drawSelection(game.selectedSquare);
+        renderer.drawLegalMoves(legalMoves);
         renderer.drawPieces(game.board, textureManager);
         renderer.present();
+
+        if (game.status != GameStatus::Active) {
+            std::string title = "Game Over";
+            std::string msg = "";
+            if (game.status == GameStatus::Checkmate) {
+                msg = (game.sideToMove == Color::White) ? "Checkmate! Black wins." : "Checkmate! White wins.";
+            } else {
+                msg = "Stalemate! It's a draw.";
+            }
+
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title.c_str(), msg.c_str(), renderer.getSDLWindow());
+            
+            // Restart the game automatically after dismissing the message box
+            game = GameState();
+        }
 
         SDL_Delay(16); // ~60fps
     }

@@ -15,21 +15,18 @@ void Board::setPiece(Position pos, Piece piece) {
     }
 }
 
+void Board::movePiece(Position from, Position to) {
+    Piece p = getPiece(from);
+    setPiece(to, p);
+    setPiece(from, {PieceType::None, Color::None});
+}
+
 bool Board::isInside(Position pos) const {
     return pos.row >= 0 && pos.row < 8 && pos.col >= 0 && pos.col < 8;
 }
 
 bool Board::isEmpty(Position pos) const {
     return getPiece(pos).type == PieceType::None;
-}
-
-bool Board::makeMove(const Move& move) {
-    if (!isInside(move.from) || !isInside(move.to)) return false;
-    
-    Piece p = getPiece(move.from);
-    setPiece(move.to, p);
-    setPiece(move.from, {PieceType::None, Color::None});
-    return true;
 }
 
 void Board::setupStartingPosition() {
