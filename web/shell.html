@@ -21,16 +21,8 @@
       font: 15px/1.5 system-ui, -apple-system, sans-serif;
     }
     h1 { margin: 0; font-size: 20px; font-weight: 600; }
-    .hint { margin: 0; color: #999; text-align: center; }
-    kbd {
-      padding: 1px 6px;
-      border: 1px solid #555;
-      border-radius: 4px;
-      font: inherit;
-      font-size: 13px;
-    }
     /* Fit both the width and the height of the viewport (minus the text). */
-    #stage { position: relative; width: min(890px, 100%, (100vh - 150px) * 890 / 800); aspect-ratio: 890 / 800; }
+    #stage { position: relative; width: min(890px, 100%, (100vh - 90px) * 890 / 800); aspect-ratio: 890 / 800; }
     /* Width/height attributes are set by SDL; CSS only scales the canvas. */
     canvas { display: block; width: 100% !important; height: 100% !important; outline: none; }
     #status {
@@ -41,17 +33,14 @@
       justify-content: center;
       color: #999;
     }
-    a { color: #6f9cf0; }
   </style>
 </head>
 <body>
   <h1>Chess</h1>
-  <p class="hint">You play White. The engine plays Black and freezes the page for up to 2&nbsp;s while it thinks. <kbd>E</kbd> toggles the engine.</p>
   <div id="stage">
     <div id="status">Loading…</div>
     <canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
   </div>
-  <p class="hint">C++20 + SDL2, compiled to WebAssembly with Emscripten · <a href="https://github.com/ovolovikk/chess">source</a></p>
 
   <script>
     var statusEl = document.getElementById('status');

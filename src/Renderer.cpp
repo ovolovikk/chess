@@ -216,9 +216,20 @@ void Renderer::drawEvalBar(int evalWhiteCp, bool aiEnabled) {
         drawText(buf, barX, 4, black);                         // top = opponent
     }
 
-    // Show whether the AI is active.
-    SDL_Color gray = { 200, 200, 200, 255 };
-    drawText(aiEnabled ? "AI: ON" : "AI: OFF", barX, m_boardSize / 2 - 10, gray);
+    // Show whether the AI is active, on a dark badge so it reads against both
+    // the white and the blue half of the bar.
+    if (m_font) {
+        const char* label = aiEnabled ? "AI: ON" : "AI: OFF";
+        int textW = 0, textH = 0;
+        TTF_SizeText(m_font, label, &textW, &textH);
+        const int pad = 4;
+        SDL_Rect badge = { barX + (barW - textW) / 2 - pad, m_boardSize / 2 - textH / 2 - pad,
+                           textW + 2 * pad, textH + 2 * pad };
+        SDL_SetRenderDrawColor(m_renderer, 30, 30, 30, 255);
+        SDL_RenderFillRect(m_renderer, &badge);
+        SDL_Color labelColor = aiEnabled ? SDL_Color{ 120, 220, 120, 255 } : SDL_Color{ 235, 235, 235, 255 };
+        drawText(label, badge.x + pad, badge.y + pad, labelColor);
+    }
 }
 
 void Renderer::present() {

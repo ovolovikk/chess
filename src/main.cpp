@@ -70,10 +70,13 @@ static void runFrame(App& app)
         app.isRunning = false;
     }
 
+#ifndef __EMSCRIPTEN__
+    // The browser build always plays against the engine, so E only works on desktop.
     if (app.inputHandler.aiTogglePressed()) {
         app.aiEnabled = !app.aiEnabled;
         std::cout << "AI " << (app.aiEnabled ? "enabled" : "disabled") << std::endl;
     }
+#endif
 
     // Only let the human move when it is not the AI's turn.
     bool aiToMove = app.aiEnabled && game.sideToMove == AI_COLOR;
@@ -149,7 +152,7 @@ int main(int argc, char* argv[])
     App app{renderer, textureManager, inputHandler, engine};
 
 #ifdef __EMSCRIPTEN__
-    // Visitors of the web page come to play the engine, so it starts enabled,
+    // Visitors of the web page come to play the engine, so it is always on,
     // and it thinks for less time because the tab is frozen while it searches.
     app.aiEnabled = true;
     engine.timeLimitMs = 2000;
